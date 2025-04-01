@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+    {% block content%}
+    <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+    {% include 'includes/sidebar.html' %}
+    {% include 'includes/navbar.html' %}
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div id="message" class="container">
+                                <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">
+                                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>
+                                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Error: {% endif %}
+                                        {{ message }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Invoice list</h1>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModalCenter">
+                        New invoice
+                      </button>                      
+
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Invoice No</th>
+                                            <th>Client</th>
+                                            <th>Created</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                  
+                                    <tbody>
+                                        {% for record in records %}
+                                        <tr>                                     
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ record.invoice_no }}</td>
+                                            <td>{{ record.client.name }}</td>
+                                            <td>{{ record.created_at }}</td>                               
+                                            <td>
+                                                <a href="{% url 'charges' record.id %}" class="btn btn-primary">View</a>
+                                                <a href="{% url 'delete_invoice' record.id %}" class="btn btn-danger">Delete</a>
+                                            </td>                               
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                                            <!-- Modal -->
+                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">New invoice</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                                <form method="post">
+                                  <div class="modal-body">
+                                   {% csrf_token %}
+                                    {{form}}
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                            </div>
+                        </div>
+
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+            {% block js %}
+            <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+            <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+        
+            <!-- Page level custom scripts -->
+            <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+            {% endblock js %}
+ {% endblock %}

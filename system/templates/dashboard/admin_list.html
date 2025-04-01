@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+    {% block content%}
+    <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+    {% include 'includes/sidebar.html' %}
+    {% include 'includes/navbar.html' %}
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div id="message" class="container">
+                                <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">
+                                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>
+                                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Error: {% endif %}
+                                        {{ message }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Admin list</h1>
+                    </div>
+                    <a href="{% url 'create_admin' %}" class="btn btn-primary btn-lg my-3">Add an Admin</a>
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Email</th>
+                                        <th>Actions</th>
+                                    </thead>
+                                    <tbody>
+                                    {% for admin in admins %}  
+                                        <tr>  
+                                        <td>{{admin.first_name}}</td>  
+                                        <td>{{ admin.last_name}}</td>  
+                                        <td>{{ admin.email }}</td>  
+                                        <td colspan="2">
+                                            <a href="{% url 'delete_admin' admin.id %}" class="btn btn-danger">Delete</a>
+                                        </td>  
+                                        </tr>  
+                                    {% endfor %} 
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+            {% block js %}
+            <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+            <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+        
+            <!-- Page level custom scripts -->
+            <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+            {% endblock js %}
+ {% endblock %}

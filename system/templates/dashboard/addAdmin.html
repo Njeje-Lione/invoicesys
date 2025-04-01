@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+    {% block content%}
+    {% include 'includes/sidebar.html' %}
+    {% include 'includes/navbar.html' %}
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div id="message" class="container">
+                                <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">
+                                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>
+                                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Error: {% endif %}
+                                        {{ message }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if form.non_field_errors %}
+                        <div id="message" class="container">
+                            <div {% if message.tags %} class="alert alert-danger"{% endif %} role="alert">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>
+                                    <ul>
+                                        {% for error in form.non_field_errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                            </div>
+                        </div>         
+                    {% endif %}
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Add Admin</h1>
+                    </div>
+
+                    {{ form.errors }}
+    
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                            <label for="first_name">First name</label>
+                            {{ form.first_name }}
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="email">Last name</label>
+                                {{ form.last_name }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                            <label for="email">email</label>
+                            {{ form.email }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                            <label for="password">Password</label>
+                            {{ form.password }}
+                            {% if form.password.errors %}  
+                                <div class="invalid-feedback">
+                                    <ul>
+                                        {% for error in form.password.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                  </div>
+                            {% endif %}
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="confirm_password">Confirm assword</label>
+                                {{ form.confirm_password }}
+                                {% if form.confirm_password.errors %}  
+                                    <div class="invalid-feedback">
+                                        <ul>
+                                            {% for error in form.confirm_password.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary m-4">Add Admin</button>
+                    </form>
+
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+ {% endblock %}

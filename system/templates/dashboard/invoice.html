@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+    {% block content%}
+    <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+    {% include 'includes/sidebar.html' %}
+    {% include 'includes/navbar.html' %}
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div id="message" class="container">
+                                <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">
+                                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>
+                                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Error: {% endif %}
+                                        {{ message }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Invoice</h1>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModalCenter">
+                        New item
+                      </button>                      
+                      
+                      <a href="{% url 'list_objects' 'invoice' 'Invoice' %}" class="btn btn-danger btn-lg mx-4">Back</a>
+
+                      
+                        <div class="card">
+                            <div class="card-body">
+                            <div class="container mb-5 mt-3">
+                                <div class="row d-flex align-items-baseline">
+                                <div class="col-xl-9">
+                                    <p style="color: #7e8d9f;font-size: 20px;">Invoice >> <strong>ID: {{invoice.invoice_no}}</strong></p>
+                                </div>
+                                <div class="col-xl-3 float-end">
+                                    {% comment %} <a href="" data-mdb-ripple-init class="btn btn-light text-capitalize" data-mdb-ripple-color="dark"><i
+                                        class="far fa-file-pdf text-danger"></i> Download PDF</a> {% endcomment %}
+                                </div>
+                                <hr>
+                                </div>
+                        
+                                <div class="container">
+                                <div class="col-md-12 mb-5">
+                                    <div class="text-center">
+                                    <p class="h3">Company name</p>
+                                    </div>
+                        
+                                </div>
+                        
+                        
+                                <div class="row">
+                                    <div class="col-xl-8">
+                                    <ul class="list-unstyled">
+                                        <li class="text-muted">Client: <span class="fw-bold">{{invoice.client.name}}</span></li>
+                                        <li class="text-muted">email: <span class="fw-bold">{{invoice.client.email}}</li>
+                                    </ul>
+                                    </div>
+                                    <div class="col-xl-4">
+                                    <p class="text-muted">Invoice</p>
+                                    <ul class="list-unstyled">
+                                        <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
+                                            class="fw-bold">ID:</span>{{invoice.invoice_no}}</li>
+                                        <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
+                                            class="fw-bold">Creation Date: </span>{{invoice.created_at}}</li>
+                                       
+                                    </ul>
+                                    </div>
+                                </div>
+                        
+                                <div class="row my-2 mx-1 justify-content-center">
+                                    <table class="table table-striped table-borderless">
+                                    <thead style="background-color:#84B0CA ;" class="text-white">
+                                        <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Item</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for charge in charges %}
+                                    <tr>
+                                        <td scope="row ">{{ forloop.counter }}</td>
+                                        <td>{{charge.name}}</td>
+                                        <td>{{charge.quantity}}</td>
+                                        <td>{{charge.price}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                        
+                                    </table>
+                                </div>
+                                <hr class="mb-3">
+                                <div class="row">
+                                    <div class="col-xl-8">
+                        
+                                    </div>
+                                    <div class="col-xl-4">
+                                    <p class="text-black float-start"><span class="text-black me-3"> Total Amount </span><span
+                                        style="font-size: 25px;"> Ksh {{total_charges}}</span></p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-xl-10">
+                                    {% comment %} <p>Thank you for Choosing us</p> {% endcomment %}
+                                    </div>
+                                    <div class="col-xl-2">
+                                    </div>
+                                </div>
+                        
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+          
+                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Add Item</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                                <form method="post">
+                                    <div class="modal-body">
+                                        {% csrf_token %}
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                            <label for="name">Item</label>
+                                            {{ form.name }}
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                            <label for="quantity">Quantity</label>
+                                            {{form.quantity}}
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                            <label for="price">Price</label>
+                                            {{form.price}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                            </div>
+                        </div>
+
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+ {% endblock %}
