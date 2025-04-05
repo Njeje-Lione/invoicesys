@@ -2,8 +2,8 @@ Step 1:Create an empty folder
 Step 2:Put the system folder inside that empty folder
 Step 3: Create a virtual env on using the command python -m venv NAME_OF_VIRTUAL_ENV eg python -m venv env
 step 4: Activate virtual env On MAC it is: source ./NAME_OF_VIRTUAL_ENV/bin/activate eg source ./env/bin/activate
-Step 5: pip3 install django
-Step 6: cd system
+Step 5: cd system
+Step 6: pip3 install -r requirements.txt
 Step 7: python3 manage.py makemigrations
 Step 8: python3 manage.py migrate
 Step 9: python3 manage.py runserver

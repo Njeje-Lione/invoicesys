@@ -9,5 +9,6 @@ urlpatterns = [
     path('deleteClient/<int:pk>/',views.delete_client,name='delete_client'),
     path('invoice/',views.create_invoice,name="create_invoice"),
     path('charges/<int:invoice_id>',views.charges,name="charges"),
-    path('deleteInvoice/<int:pk>/',views.delete_invoice,name='delete_invoice')
+    path('deleteInvoice/<int:pk>/',views.delete_invoice,name='delete_invoice'),
+    path('invoice/<int:invoice_id>/pdf/', views.generate_invoice_pdf, name='generate_invoice_pdf'),
 ]

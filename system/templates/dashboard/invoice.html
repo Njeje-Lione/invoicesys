@@ -37,8 +37,8 @@
                                     <p style="color: #7e8d9f;font-size: 20px;">Invoice >> <strong>ID: {{invoice.invoice_no}}</strong></p>
                                 </div>
                                 <div class="col-xl-3 float-end">
-                                    {% comment %} <a href="" data-mdb-ripple-init class="btn btn-light text-capitalize" data-mdb-ripple-color="dark"><i
-                                        class="far fa-file-pdf text-danger"></i> Download PDF</a> {% endcomment %}
+                                    <a href="{% url 'generate_invoice_pdf' invoice.id %}" data-mdb-ripple-init class="btn btn-light text-capitalize" data-mdb-ripple-color="dark"><i
+                                        class="far fa-file-pdf text-danger"></i> Download PDF</a>
                                 </div>
                                 <hr>
                                 </div>

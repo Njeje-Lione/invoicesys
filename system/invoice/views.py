@@ -8,6 +8,8 @@ import random
 from django.http import HttpResponse
 from django.db.models import F, Sum
 from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string 
+from xhtml2pdf import pisa
 
 
 # Create your views here.
@@ -112,3 +114,30 @@ def delete_invoice(request,pk):
     invoice.delete()
     messages.success(request,'Invoice deleted successfully')
     return redirect('list_objects', app_name='invoice',model_name='Invoice')
+
+@login_required(login_url='login')  
+def generate_invoice_pdf(request, invoice_id):
+    charges = InvoiceItem.objects.filter(invoice_id=invoice_id)
+    invoice = Invoice.objects.get(id=invoice_id)
+
+    total_charges = InvoiceItem.objects.filter(invoice_id=invoice_id).aggregate(total=Sum(F('price') * F('quantity')))['total']
+
+    context = {
+        'charges':charges,
+        'invoice':invoice,
+        'total_charges':total_charges,
+    }
+
+    # Render the HTML template with context
+    html_string = render_to_string('dashboard/downloadInvoice.html', context)
+    
+    # Create a PDF file
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="report_'+ str(random.randint(100, 9999))+'.pdf"'
+    
+    # Convert HTML to PDF
+    pisa_status = pisa.CreatePDF(html_string, dest=response)
+    
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html_string + '</pre>')
+    return response
